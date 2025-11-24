@@ -6,6 +6,115 @@
     <title>Document</title>
 </head>
 <body>
+
+	To achieve your goal, we will follow these steps:
+
+1. **Start Minikube**: This will set up a local Kubernetes cluster.
+2. **Create an Nginx Deployment**: We'll create a deployment for Nginx.
+3. **Expose the Service on Port 8090**: We'll expose the Nginx deployment to be accessible via port 8090 on your local machine.
+4. **Verify in Browser**: We'll check if the Nginx service is accessible via the browser.
+5. **List all Pods and Services**: We'll list the current pods and services running in your cluster.
+
+### Step-by-Step Guide:
+
+1. **Start Minikube:**
+
+   Open your terminal and run:
+
+   ```bash
+   minikube start
+   ```
+
+   This will start a local Kubernetes cluster in Minikube. It may take a few moments.
+
+2. **Create an Nginx Deployment:**
+
+   To create an Nginx deployment, run the following command:
+
+   ```bash
+   kubectl create deployment nginx --image=nginx
+   ```
+
+   This will create a deployment called `nginx` using the official Nginx image.
+
+3. **Expose the Nginx Service on Port 8090:**
+
+   Now, expose the Nginx deployment to be accessible on port 8090. Run:
+
+   ```bash
+   kubectl expose deployment nginx --type=NodePort --port=80 --target-port=80 --name=nginx-service
+   ```
+
+   This command will expose the deployment using a `NodePort` service. The default Nginx port (80) will be forwarded to port 8090 on your local machine.
+
+4. **Verify in Browser:**
+
+   Minikube provides a convenient way to access services running inside the cluster. To get the URL for the exposed service, run:
+
+   ```bash
+   minikube service nginx-service --url
+   ```
+
+   This will return a URL, and you can open it in your browser to verify that Nginx is accessible.
+
+5. **List All Pods and Services:**
+
+   To list the pods running in the cluster, run:
+
+   ```bash
+   kubectl get pods
+   ```
+
+   To list the services running in the cluster, run:
+
+   ```bash
+   kubectl get services
+   ```
+
+   This will show you the status of the pods and the services (including the `nginx-service` you've just created).
+
+---
+
+### Example Output:
+
+1. After running `kubectl create deployment nginx --image=nginx`, the output will look like:
+
+   ```
+   deployment.apps/nginx created
+   ```
+
+2. After running `kubectl expose deployment nginx --type=NodePort --port=80 --target-port=80 --name=nginx-service`, the output will be:
+
+   ```
+   service/nginx-service exposed
+   ```
+
+3. Running `minikube service nginx-service --url` might return something like:
+
+   ```
+   http://192.168.99.100:30980
+   ```
+
+   You can now open `http://192.168.99.100:30980` in your browser to see the Nginx default page.
+
+4. Running `kubectl get pods` will give you something like:
+
+   ```
+   NAME                         READY   STATUS    RESTARTS   AGE
+   nginx-<hash>                  1/1     Running   0          2m
+   ```
+
+5. Running `kubectl get services` will show:
+
+   ```
+   NAME             TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
+   nginx-service    NodePort    10.109.203.128   <none>        80:30980/TCP   2m
+   ```
+
+---
+
+Let me know if you run into any issues or need further clarification!
+
 JENKINS PIPELINE SCRIPT  WEEK 9 
 
 ->Start a freestyle project and give Description :- provide the description of the project
