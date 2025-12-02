@@ -819,6 +819,21 @@ docker run --name my-redis -d redis
 bash
 docker ps
 
+docker-compose.yaml :--
+
+version: "3.9"
+services:
+  web:
+    image: nginx:latest
+    ports:
+      - "8080:80"
+
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: demo
+      POSTGRES_PASSWORD: demo
+      POSTGRES_DB: demo_db
 
 Shows only *active* containers.
 
@@ -853,7 +868,131 @@ docker rm my-redis
 bash
 docker rmi redis
 ---
+Run the setup:
 
+docker compose up -d
+
+III. Open your browser and visit: http://localhost:8080.
+
+IV. Expected Output:
+
+Nginx welcome page is displayed.
+db container runs in the background.
+
+2.Write and interpret docker-compose.yml files
+Task:
+Modify docker-compose.yml to add a Redis cache:
+
+  redis:
+    image: redis:alpine
+
+II. Add a depends_on so web waits for Redis:
+  web:
+    image: nginx:latest
+    ports:
+      - "8080:80"
+    depends_on:
+      - redis
+
+III. Restart the setup:
+docker compose up -d
+docker compose ps
+
+IV. Expected Output:
+
+Three services (web, db, redis) are listed as running.
+
+3.Deploy across different machines
+Task:
+Zip your compose-lab folder.
+
+Transfer it to another machine with Docker Compose installed.
+
+II. Run:
+docker compose up -d
+
+Check that Nginx and Postgres work there as well.
+
+III. Expected Output:
+The same services run on the new machine without changes.
+
+4.Networking and persistent storage
+Task:
+Update your docker-compose.yml to add a custom network and volume:
+
+networks:
+  app-net:
+
+volumes:
+  db-data:
+
+services:
+  web:
+    image: nginx:latest
+    ports:
+      - "8080:80"
+    networks:
+      - app-net
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: demo
+      POSTGRES_PASSWORD: demo
+      POSTGRES_DB: demo_db
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - app-net
+
+II. Run:
+docker compose up -d
+III. Insert some data into Postgres (optional with psql).
+IV. Remove containers:
+docker compose down
+V. Start again:
+docker compose up -d
+VI. Expected Output:
+Database data persists across restarts.
+Services communicate via the app-net network using service names.
+
+5.Faster iteration during development
+Task: 
+Create a simple Flask app in app.py:
+
+from flask import Flask
+app = Flask(__name__)
+@app.route("/")
+def home():
+    return "Hello from Flask + Docker!"
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
+
+II. Add a Dockerfile in the same folder:
+
+FROM python:3.10-slim
+WORKDIR /app
+COPY app.py /app/
+RUN pip install flask
+CMD ["python", "app.py"]
+
+III. Update docker-compose.yml:
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+IV. Run:
+docker compose up --build
+Visit http://localhost:5000.
+Change the return text in app.py (e.g., "Hello Docker Compose!").
+V. Rebuild:
+docker compose up --build
+VI. Expected Output:
+New message appears instantly after rebuild.
 ---
 
 ## **Part 2 – Working with Dockerfile**
