@@ -26,185 +26,229 @@ This project allows users to manage table data with features like sorting, searc
 - Only visible columns are included in the export
 
 ---
-1. Create a Private Repository on GitHub
-Go to github.com
-Click New Repository
-Enter repository name
-Select Private
-Click Create Repository
+Task 1: Pushing multi-folder project into private repository( Note: student take
+ screenshots for upload).
+ 
+ 1. Create a Private Repository on GitHub
+  Gotohttps://github.com
+  ClickNew repository
+  Giveit aname
+  CheckPrivate
+  ClickCreate repository
+ 
+ 2. Initialize Git in Your Local Project (if not already done)
+ Open a terminal in the root of your multi-folder project:
+ cd /path/to/your/project
+ git init
+ 
+ 3. Add the Remote Repository (in bash)
+ You’ll see a URL on GitHub after creating the repo. It will look as below , run this command
+ in git bash:
+ git remote add origin https://github.com/yourusername/your-private-repo.git
+ 
+ 4. Add and Commit Your Files(in bash)
+ git add .
+ git commit-m "Initial commit"
+ 
+ 5. Push to the Private Repository
+ If the repo is new and empty, push like this from git bash:
+ git push-u origin master
+ If you're using the main branch (GitHub default):
+ git push-u origin main
+ You may be prompted to log in (via username/password or token).
+ 
+ 
+ Task 2: Students must explore all listed git commands on the multi-folder
+ project in local and remote repository.
+ 
+ 1. Git Commands:
+ ●
+ git version : The command git version is used to check the version of git.
+ git--version
+  git config: Configures Git settings. Commonly used to set up user information
+ git config--global user.name "Your Name"
+ git config--global user.email "youremail@example.com"
+  git config--list: Displays all the Git configurations for the current user.
+ 
+ 
+ 2. Repository Management
+  git init: Initializes a new Git repository in the current directory
+ git init
+  gitclone: Creates a copy of an existing Git repository from a remote source (e.g., GitHub) to your local machine
+ git clone https://github.com/username/repository.git
+  gitremote–v : To see the remote repository that is connected to your local repository
+ git remote–v
+  gitremote add : To add a new remote repository to your local repository
+ git remote add origin https://github.com/username/repository.git
+  Pushing Changes to Remote: To push your local commits to a remote repository:
+ git push <remote_name> <branch_name>
+ git push origin main
+  Pulling Updates from Remote: To pull the latest changes from the remote repository
+ and merge them into your local branch
+ git pull <remote_name> <branch_name>
+ git pull origin main
+  gitremote remove: To remove a remote repository from your local configuration:
+ git remote remove <remote_name>
+ git remote remove origin
+  RenamingaRemote: torename an existing remote:
+git remote rename <old_name> <new_name>
+ git remote rename origin upstream
+  Fetching Updates from Remote: To fetch updates from the remote repository but
+ not merge them into your local branch
+ git fetch <remote_name>
+  ChangingRemote URL: Tochange the URL of a remote (e.g., after changing the
+ remote repository address):
+ git remote set-url <remote_name> <new_url>
+ git remote set-url origin https://github.com/username/new-repository.git
+  Viewing the Remote Repository’s Information: to see detailed information about a
+ remote repository
+ git remote show <remote_name>
+ git remote show origin
+ 
+ 3. Staging and Committing
+  git status: Shows the status of changes in your working directory and staging area. It
+ tells you which files are untracked, modified, or ready to be committed.
+ git status
+  gitadd: Adds changes in the working directory to the staging area.
+ git add filename.txt # Adds a specific file
+ git add .
+ # Adds all changes in the directory
+  gitcommit: Commits the staged changes to the repository with a descriptive message.
+ The-m option allows you to include a commit message.
+ git commit-m "Commit message describing changes"
 
-2. Initialize Git in Local Project
-Open terminal in your project root:
-cd /path/to/project
-git init
+ 4. Branching and Merging
+  git branch: Lists all branches or creates a new branch
+ git branch
+ # Lists all branches or
+ ->git branch-a
+ # Lists all branches
+ ->git branch branch-name # Creates a new branch
+ ->git branch-d <branch_name> # Deletes a branch
+Use-D to force-delete if it hasn't been merged.
+  Listing All Remote Branches : To you want to list all branches on the remote
+ repository
+ ->git branch–r
+  gitcheckout: Switches to a different branch
+ git checkout branch-name # Switches to an existing branch
+ git checkout-b new-branch # Creates and switches to a new branch
+  Pruning Deleted Remotes : If a branch was deleted on the remote but still shows up
+ locally.
+ git remote prune origin
+ 
+ =>When someone deletes a branch on the remote, your local Git doesn’t automatically
+ remove the corresponding remote-tracking branch (like origin/old-feature).
+ git remote prune origin removes these outdated references.
 
-3. Add Remote Repository
-Copy the URL from GitHub and run:
-git remote add origin https://github.com/username/private-repo.git
+  Fetching a Specific Remote Branch: To fetch a specific branch from a remote.
+ git fetch <remote_name> <branch_name>
+ git fetch origin feature-branch
+  Setting the Upstream Branch for Pushing : When pushing for the first time and
+ want to set the remote branch you are pushing to:
+ git push--set-upstream <remote_name> <branch_name>
+ git push--set-upstream origin feature-branch
+ git merge: Merges the specified branch into the current branch. This command
+ integrates the changes from the feature branch into the main branch.
+ git checkout main
+ 
+ # Switch to the main branch
+ ->git merge branch-name # Merge branch-name into main
+  Rebasing a Local Branch onto a Remote Branch: If you want to rebase your local
+ branch onto a remote branch (this can be useful to keep your history linear)
+ ->git fetch <remote_name>
+ ->git rebase <remote_name>/<branch_name>
 
-Add & Commit Files
-git add .
-git commit -m "Initial commit"
+ Example:
+ git fetch origin
+ git rebase origin/main
+ 
+ 5.
+ Undoing Changes
+
+ git reset : Removes the specified file from the staging area but leaves the working
+ directory unchanged. git reset--hard can also reset the working directory and staging
+ area to the last commit.
+ git reset <file>:
+  git revert: Creates a new commit that undoes the changes from a specified commit,
+ leaving the history intact.
+ 
+ =>git revert <commit>:
+ Viewing History
+  gitlog: Shows a history of commits in the repository, including commit hashes,
+ messages, and timestamps. Use git log--oneline for a more concise view.
+ ->git log
+  git diff: Displays differences between various commits, the working directory, and the
+ staging area. git diff without arguments shows changes not yet staged.
+ git diff:
+  git show: Shows the details of a specific commit, including the changes made and the
+ commit message.
+ git show <commit>
+ 
+ To undo the changes made to file before staging it.
+  gitrestore filename
+ To correct committed with the wrong message
+  gitcommit--amend-m "Corrected commit message"
+ 
+ 9. Recovering deleted branches
+  gitreflog
+  gitcheckout-b feature-ui <commit_hash>
+ 
+ 10. To download the latest changes from the remote without merging
+  gitfetch origin
 
-Push to GitHub
-For main branch (default):
-git push -u origin main
+ 11. To remove accidentally committed sensitive file from Git history.
+  gitfilter-branch--force--index-filter \
+  "gitrm--cached--ignore-unmatch secrets.txt" \
+ --prune-empty--tag-name-filter cat----all
+ 
+ 12. To merge changes from another branch
+ First switch to branch where changes are to applied and then merge another-branch
+ gitcheckout previous-branch
+  gitmerge another-branch
 
-Task 2: Explore All Git Commands
-
-1. Git Basic Commands
-Check Git Version
-git --version
-
-Configure User Info
-git config --global user.name "Your Name"
-git config --global user.email "you@example.com"
-
-List Git Configurations
-git config --list
-
-2. Repository Management
-Initialize Repo
-git init
-
-Clone Repo
-git clone https://github.com/username/repo.git
-
-View Remotes
-git remote -v
-
-Add Remote
-git remote add origin https://github.com/username/repo.git
-
-Push to Remote
-git push origin main
-
-Pull from Remote
-git pull origin main
-
-Remove Remote
-git remote remove origin
-
-Rename Remote
-git remote rename origin upstream
-
-Fetch Updates
-git fetch origin
-
-Change Remote URL
-git remote set-url origin https://github.com/username/new.git
-
-Show Remote Info
-git remote show origin
-
-4. Branching & Merging
-List/Create/Delete Branch
-git branch
-git branch new-branch
-git branch -d branch-name
-git branch -D branch-name   # force delete
-
-List Remote Branches
-git branch -r
-
-Checkout Branch
-git checkout branch-name
-git checkout -b new-branch
-
-Prune Deleted Remote Branches
-git remote prune origin
-
-Fetch Specific Branch
-git fetch origin feature-branch
-
-Set Upstream Branch
-git push --set-upstream origin feature-branch
-
-Merge Branch
-git checkout main
-git merge branch-name
-
-Rebase on Remote
-git fetch origin
-git rebase origin/main
-
-5. Undoing Changes
-Unstage File
-git reset file.txt
-
-Revert Commit
-git revert <commit>
-
-6. View History
-Commit Log
-git log
-git log --oneline
-
-Show Differences
-git diff
-
-Show Commit Details
-git show <commit>
-
-7. Restore File Before Staging
-git restore filename
-
-8. Correct Last Commit Message
-git commit --amend -m "Corrected message"
-
-9. Recover Deleted Branch
-git reflog
-git checkout -b branch-name <commit-hash>
-
-10. Download Latest Changes Without Merge
-git fetch origin
-
-11. Remove Sensitive File from History
-git filter-branch --force --index-filter \
-"git rm --cached --ignore-unmatch secrets.txt" \
---prune-empty --tag-name-filter cat -- --all
-
-12. Merge Two Branches
-git checkout previous-branch
-git merge another-branch
-
-13. Resolve Merge Conflicts
-
-Open file → remove conflict markers
-
-Then:
-
-git add filename
-git commit
-
-14. .gitignore
-Create File
-touch .gitignore
-
-Common Rules
-*.log
-temp/
-secret.txt
-folder/*
-!folder/important.txt
-*.bak
-
-15. Find Who Changed Each Line
-git blame script.py
-
-16. Git Stash
-git stash
-git switch another-branch
-git switch main
-git stash apply
-
-17. Check Merged Branches
-git branch --merged
-
-18. Delete Multiple Branches
-git branch -d branch1 branch2 branch3
-
-
+ 13. To resolve a merge conflict manually
+ You tried to merge two branches and Git reported a conflict in x.js. Then for conflict
+ resolution do:
+ 1. Openx.js and resolve/remove the conflict markers (<<<<<<<,
+ =======, >>>>>>>)
+ 2. After resolving:
+  gitaddapp.js
+  gitcommit #IfGit didn’t auto-create a merge commit
+ 14. The .gitignore
+ The .gitignore file is used to tell Git which files or directories to ignore in your project. It's a
+ useful way to avoid committing unnecessary files like log files, build outputs, and IDE
+ configurations.
+ a. Create a .gitignore File
+ In the root directory of your Git project, create a file called .gitignore
+ touch .gitignore
+ b. AddRules to .gitignore
+ Inside the .gitignore file, you add patterns for the files and directories you want Git to ignore.
+ Each pattern should be written on a new line.
+ Here are some common examples:
+  Ignore all .log files: *.log
+  Ignore a specific file: secret_file.txt
+  Ignore all files in a temp/ directory:
+ temp/
+  Ignore all files except important_file.txt inside a folder:
+ folder/*
+ !folder/important_file.txt
+  Ignore files with a specific extension: *.bak
+ 15. To see who changed a particular line in a file
+  gitblame script.py
+16. Git stash
+ # You modified files A and B, but not committed them.
+ git stash
+ # saves changes and reverts to clean state
+ git switch another-branch
+ # dosomething else...
+ git switch main
+ git stash apply
+ # brings back your changes
+ 17. To check branch is merge
+  gitbranch–merged
+ If branch not merged then displays its name
+ 18. To Delete multiple local branches at once
+  gitbranch–d branc1 branch2 branch3
 
 ----------------------------------------------------------------------------------
 
@@ -418,6 +462,7 @@ git add .
 git commit -m "Applied patch"
 ----------------------------------------------------------------------------------------------------------------
 Creating a Multi-Module Maven Project:
+
 Open eclipse-> file-> new -> other -> Maven -> MavenProject ->click on next.
 Check the first option: Create a Simple project(skip archetype selection) and click on next.
 Give groupID: KMIT, artifact ID: MultiModule, in the packaging tab select the drop down and opt for pom.
