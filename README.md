@@ -416,7 +416,90 @@ Place patch in the repo folder.
 git apply 0001-file.patch
 git add .
 git commit -m "Applied patch"
+----------------------------------------------------------------------------------------------------------------
+Creating a Multi-Module Maven Project:
+Open eclipse-> file-> new -> other -> Maven -> MavenProject ->click on next.
+Check the first option: Create a Simple project(skip archetype selection) and click on next.
+Give groupID: KMIT, artifact ID: MultiModule, in the packaging tab select the drop down and opt for pom.
 
+Give Name: Multimodule creation and Description: Sample multimodule with parent child hierarchy and click on next.
+Now the Multimodule folder is created and displayed in the project explorer on the left. Right click on the folder and opt new -> mavenModule
+
+Check the option Create a Simple project(skip archetype selection, give the artifactID: MultiModuleChild1 and click on next and finish.
+
+Now you can see, the module1 we created is displayed in the project explorer with a separate pom.xml file.
+ 
+. Right click on the MultiModule folder in the project explorer and opt new -> mavenModule
+Give the artifactID: MultiModuleChild2 and click on next.
+
+
+In filters search for maven-archetype-webapp, select the version 1.1/1.5 and click on next.
+
+Now click on finish, and confirm with a Y in the console.
+
+Now you can watch the new child is been added to the parent project.
+
+Note:Childs or Modules can be added to the projects who have the packaging type as pom. If we try to create a module within child1 it is not possible since its packaging is opted to JAR.
+
+////////////////////////////////////////////////////////////////////////////////////////////
+=>Linking two modules in a Parent Project:
+
+Go to the module u want to connect. And add a dependency to other module on which the current module depends. For example if my child2 is dependent on child1. I have to change the dependencies in the pom.xml by adding a new dependency of child1.
+Steps to add dependency:
+Goto pom.xml of child2.
+
+Navigate to dependencies tag. Update the dependencies with child1 dependency as given below, and save pom.xml after update.
+<dependency>
+		<groupId>KMIT</groupId>
+			<artifactId>MultimoduleChild1</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+	</dependency>
+
+
+Now build the child2 by right clicking it and opting run as->maven build.
+The build will be a failure. Because we haven’t build the parent project and the child project. Child1 is dependent on parent. And Child2 is dependent on child2. SO we have to build ass the previous module first and then build the current child2.
+After building parent and child1, build child2 now the build will be a Success
+
+
+
+
+Executable JARs
+
+Add to pom.xml:
+
+<build>
+<plugins>
+<plugin>
+<groupId>org.apache.maven.plugins</groupId>
+<artifactId>maven-jar-plugin</artifactId>
+<configuration>
+<archive>
+<manifest>
+<mainClass>com.example.Main</mainClass>
+</manifest>
+</archive>
+</configuration>
+</plugin>
+</plugins>
+</build>
+
+
+Run:
+mvn package
+
+java -jar target/myapp.jar
+
+Building a WAR File
+Create a Maven web project with structure:
+src/main/webapp/
+ └── WEB-INF/web.xml 
+
+
+Add:
+<packaging>war</packaging>
+Command:
+mvn package
+Generates target/mywebapp.war → deploy on Tomcat server.
 -----------------------------------------------------------------------------------------
 4. Create Maven Java Project (Eclipse)
 
