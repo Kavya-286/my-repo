@@ -1,458 +1,447 @@
+dDOCKER CLI COMMANDS
+
+1)docker --version
+2)docker pull redis
+3)docker run --name my-redis -d redis
+4)docker ps
+5)docker exec -it my-redis redis-cli
+127.0.0.1:6379> SET name "Aditi"
+OK
+127.0.0.1:6379> GET name
+"Aditi"
+127.0.0.1:6379> docker stop my-redis
+(error) ERR unknown command 'docker', with args beginning with: 'stop' 'my-redis'
+127.0.0.1:6379> exit
+6)docker start my-redis
+7)docker stop my-redis
+8) docker rm my-redis
+9)docker rmi redis
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+WORKING WITH DOCKER FILESe
+
+1) On desktop create a folder C:\DockerProj\redis and open in gitbash
+2)nano Dockerfile
+3)FROM redis:latest
+  CMD ["redis-server"] and then ctrl o enter and ctrl x
+4)docker build -t redisnew .
+5)docker run --name myredisnew -d redisnew
+6)docker ps
+7)docker stop myredisnew
+8)docker login
+9)docker ps -a
+10)docker commit <containerid> that u created recently aditiv/redis1
+11)docker images
+12)docker push aditiv/redis1
+13)docker pull aditiv/redis1
+14)docker run --name myredis -d aditiv/redis
+15)docker exec -it myredis redis-cli
+127.0.0.1:6379> SET name "Aditi"
+OK
+127.0.0.1:6379> GET name
+"Aditi"
+127.0.0.1:6379> exit
+16)docker stop myredis
+17)docker rm <containerid>
+18)docker rmi aditiv/redis1
+19)docker ps -a
+20)docker logout
+------------------------------------------------------------------------------------------------------------------------------------------------------------SCRIPTED PIPELINE
+
+-> Open Jenkins Dashboard click on new item and give a name and select pipeline project
+-> Copy this code in script
+
+pipeline {
+    agent any
+
+    tools {
+        maven 'MAVEN_HOME'
+    }
+
+    stages {
+
+        stage('git repo & clean') {
+            steps {
+                bat "rmdir /s /q webmvn || exit 0"
+                bat "git clone https://github.com/ADITI12-coder/webmvn.git"
+                bat "mvn clean -f webmvn/pom.xml"
+            }
+        }
+
+        stage('install') {
+            steps {
+                bat "mvn install -f webmvn/pom.xml"
+            }
+        }
+
+        stage('test') {
+            steps {
+                bat "mvn test -f webmvn/pom.xml"
+            }
+        }
+
+        stage('package') {
+            steps {
+                bat "mvn package -f webmvn/pom.xml"
+            }
+        }
+
+    }
+}
+
+-> Click apply and save and then go for build now and in last successful build you will find the console output.
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+MINIKUBE(Open terminal and run)
+
+->minikube start
+->kubectl create deployment mynginx --image=nginx if already created then kubectl set image deployment/mynginx nginx=nginx:latest
+->kubectl get deployments
+->kubectl get pods
+->kubectl describe pods
+->kubectl expose deployment mynginx --type=NodePort --port=80 --target-port=80
+->kubectl scale deployment mynginx --replicas=4
+->kubectl get service myngnix
+->kubectl port-forward svc/mynginx 8081:80
+->Access via http://localhost:8081
+
+NAGIOS(open terminal and run)
+->docker pull jasonrivers/nagios:latest
+->docker run --name nagiosdemo -p 8888:80 jasonrivers/nagios:latest
+->Open your browser and navigate to:http://localhost:8888
+	Login Credentials:
+	Username: nagiosadmin
+	Password: nagios
+	Once logged in, explore:
+	Hosts: View systems being monitored.
+	Services: Check tasks being monitored (e.g., CPU usage).
+	Alerts: Access recent notifications.
+
+->docker stop nagiosdemo
+->docker rm nagiosdemo
+->docker images
+->docker rmijasonrivers/nagios:latest
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+AWS
+
+->Go to course invitation mail and click on start
+->Opens the aws academy, select the student login and enter the email and password details 
+->Click on Modules
+->Scroll down and select Lunch AWS Academy Lab-
+->Click on start Lab and wait AWS becomes from red to green AWS
+->Click on EC2 to create instance.Click on Launch Instance
+Stage 1  --Name (Giving name to the machine) ubuntu 
+Stage 2  -- Select AMI  ( Note: Select free tier eligible ) ubuntu server
+Stage 3   --  Architecture as 64-bit
+Stage 4  --  Instance type ----  t2.micro(default 1 CPU,1 GB RAM)
+Stage 5  --  Create a new keypair---a keypair will downloaded  with extension .pem .Store key in folder AWS
+Stage 6  -- Network Setting ----Create Security group  --  ( It deals with ports )
+(Note for understanding We have 0 to 65535 ports. Every port is dedicated to special purpose)		
+HERE select https and http (which allow to load your web pages while execution)
+Stage 7 -- Storage - 8GB ( Observation - we have root - it is same as C Drive) it default 8 GB
+Stage 8 --- click on launch instance
+Now click on the instances
+You have to get 2 tests passes. 
+Important:---- Now check the box and click on connect.
+Do this step:---once it is created select that instance 
+(Tick in checkbox) and click on connect
+Step 4: Now you can connect local system to server (EC2 instance) using secure shell SSH.
+Here copy the ssh – i command from SSH client connect tab and paste later
+Open Powershell in administrative mode and navigate to that path. 
+Type:   cd < path> 
+Go to SSh and copy the command ssh which is present at the below
+sudo apt update
+sudo apt-get install docker.io
+sudo apt install git
+Sudo apt install nano
+Step a: Create basic index.html file in folder Example and save it
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Hello from AWS</title>
 </head>
 <body>
-
-	To achieve your goal, we will follow these steps:
-
-1. **Start Minikube**: This will set up a local Kubernetes cluster.
-2. **Create an Nginx Deployment**: We'll create a deployment for Nginx.
-3. **Expose the Service on Port 8090**: We'll expose the Nginx deployment to be accessible via port 8090 on your local machine.
-4. **Verify in Browser**: We'll check if the Nginx service is accessible via the browser.
-5. **List all Pods and Services**: We'll list the current pods and services running in your cluster.
-
-### Step-by-Step Guide:
-
-1. **Start Minikube:**
-
-   Open your terminal and run:
-
-   ```bash
-   minikube start
-   ```
-
-   This will start a local Kubernetes cluster in Minikube. It may take a few moments.
-
-2. **Create an Nginx Deployment:**
-
-   To create an Nginx deployment, run the following command:
-
-   ```bash
-   kubectl create deployment nginx --image=nginx
-   ```
-
-   This will create a deployment called `nginx` using the official Nginx image.
-
-3. **Expose the Nginx Service on Port 8090:**
-
-   Now, expose the Nginx deployment to be accessible on port 8090. Run:
-
-   ```bash
-   kubectl expose deployment nginx --type=NodePort --port=80 --target-port=80 --name=nginx-service
-   ```
-
-   This command will expose the deployment using a `NodePort` service. The default Nginx port (80) will be forwarded to port 8090 on your local machine.
-
-4. **Verify in Browser:**
-
-   Minikube provides a convenient way to access services running inside the cluster. To get the URL for the exposed service, run:
-
-   ```bash
-   minikube service nginx-service --url
-   ```
-
-   This will return a URL, and you can open it in your browser to verify that Nginx is accessible.
-
-5. **List All Pods and Services:**
-
-   To list the pods running in the cluster, run:
-
-   ```bash
-   kubectl get pods
-   ```
-
-   To list the services running in the cluster, run:
-
-   ```bash
-   kubectl get services
-   ```
-
-   This will show you the status of the pods and the services (including the `nginx-service` you've just created).
-
----
-
-### Example Output:
-
-1. After running `kubectl create deployment nginx --image=nginx`, the output will look like:
-
-   ```
-   deployment.apps/nginx created
-   ```
-
-2. After running `kubectl expose deployment nginx --type=NodePort --port=80 --target-port=80 --name=nginx-service`, the output will be:
-
-   ```
-   service/nginx-service exposed
-   ```
-
-3. Running `minikube service nginx-service --url` might return something like:
-
-   ```
-   http://192.168.99.100:30980
-   ```
-
-   You can now open `http://192.168.99.100:30980` in your browser to see the Nginx default page.
-
-4. Running `kubectl get pods` will give you something like:
-
-   ```
-   NAME                         READY   STATUS    RESTARTS   AGE
-   nginx-<hash>                  1/1     Running   0          2m
-   ```
-
-5. Running `kubectl get services` will show:
-
-   ```
-   NAME             TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
-   nginx-service    NodePort    10.109.203.128   <none>        80:30980/TCP   2m
-   ```
-
----
-
-Let me know if you run into any issues or need further clarification!
-
-JENKINS PIPELINE SCRIPT  WEEK 9 
-
-->Start a freestyle project and give Description :- provide the description of the project
-->Build triggers:  here we can provide with build triggers of you choice
-->Advance project option:
-	Definition: 
-		Choose pipeline script
-paste below code there
-
-pipeline {
-    agent any
-    tools {
-        maven 'MAVEN_HOME'
-    }
-    stages {
-        stage('Clone Repo & Clean') {
-            steps {
-                bat "git clone https://github.com/Kavya-286/web-app"
-                bat "mvn -f web-app/pom.xml clean"
-            }
-        }
-        stage('Install') {
-            steps {
-                bat "mvn -f web-app/pom.xml install"
-            }
-        }
-        stage('Test') {
-            steps {
-                bat "mvn -f web-app/pom.xml test"
-            }
-        }
-        stage('Package') {
-            steps {
-                bat "mvn -f web-app/pom.xml package"
-            }
-        }
-    }
-}
-
-apply and save 
-
-============================================ 
- MINIKUBE , KBERNETES AND NAGIOS    WEEK 10 
-
-minikube start --driver=docker
-
-minikube commands : minikube start --driver=hyperv
-
-minikube status
-
-minikube kubectl -- get pods -A minikube dashboard Minikube version kubectl version –client minikube logs minikube update-check minikube update
-
-Minikube Automation Steps Step 1: Start Minikube Cluster Open your terminal and run the command: minikube start
-
-Step 2: Create and Manage Deployment Create an application in Kubernetes:
-
-Command: kubectl create deployment mynginx --image=nginx kubectl set image deployment/myngnix nginx=nginx:latest kubectl get deployments kubectl get pods kubectl describe pods kubectl expose deployment mynginx --type=NodePort --port=80 --target-port=80
-
-Step 3: Scale the Deployment Command:Scales the Nginx deployment to 4 replicas (pods). kubectl scale deployment mynginx --replicas=4 kubectl get service mynginx
-
-Step 4: Access the Nginx App Using Port Forwarding: Command: kubectl port-forward svc/mynginx 8081:80 Access the app via http://localhost:8081. If Error, use this option, Using Minikube Tunnel: Start the tunnel: command: minikube tunnel etrieve the service URL: command:minikube service mynginx --url Open the provided URL in your browser. Open the kubernets dashboard Open the minikube dashboard command : Minikube dashboard
-
-kubectl delete deployment mynginx kubectl delete service mynginx
-
-Nagios Automation Steps Step 1: Pull the Nagios Docker Image Open a terminal and run: docker pull jasonrivers/nagios:latest
-
-Step 2: Run Nagios Command: docker run --name nagiosdemo -p 8888:80 jasonrivers/nagios:latest
-
-Step 3: Access Nagios Dashboard Open your browser and navigate to: http://localhost:8888 Login Credentials: Username: nagiosadmin Password: nagios
-
-to Delete the Container: Command: docker rm nagiosdemo
-
-to Delete the Nagios image: docker rmijasonrivers/nagios:latest
-
-=======================================================================================
-
-WEEK 11 :
-
-Setting Up Jenkins CI------using GitHub Webhook with Jenkins
-
-=> Step 1: Configure Webhook in GitHub Go to your GitHub repository step 2:Navigate to Settings → Webhooks. step 3:Click “Add webhook”. step 4:In the Payload URL field: Enter the Jenkins webhook URL in the format: http:///github-webhook/ Note: If Jenkins is running on localhost, GitHub cannot access it directly. Use ngrok to expose your local Jenkins to the internet:
-
-ngrok.exe http Use the generated ngrok URL, e.g.: http://abc123.ngrok.io/github-webhook/ step 5:Set Content type to: application/json step 6:Under “Which events would you like to trigger this webhook?”, select: Just the push event step 7:Click “Add webhook” to save.
-
-=>Step 2: Configure Jenkins to Accept GitHub Webhooks 
-1 Open Jenkins Dashboard.
-
-2 Select the job (freestyle or pipeline) you’ve already created
-
-3 Click Configure.
-
-4 Scroll down to the Build Triggers section.
-
-5 Check the box: ✅GitHub hook trigger for GITScm polling
-
-6 Click Save.
-
-=>Step 3: Test the Setup 1 Make any code update in your local repo and push it to GitHub
-
-2 Once pushed, GitHub will trigger the webhook. 3 Jenkins will automatically detect the change and start the build pipeline
-
-Setting Up Jenkins Email Notification Setup (Using Gmail with App Password) Creation of app password
-
-=>Gmail: Enable App Password (for 2-Step Verification) 
-i. Go to: https://myaccount.google.com
-ii. Enable 2-Step Verification Navigate to: Security → 2-Step Verification
-Turn it ON Complete the OTP verification process (via phone/email)
-
-iii. Generate App Password for Jenkins Go to: Security → App passwords
-
-=>Select: App: Other (Custom name) Name: Jenkins-Demo Click Generate Copy the 16-digit app password Save it in a secure location (e.g., Notepad)
-
-=>Jenkins Plugin Installation
- i. Open Jenkins Dashboard 
- ii. Navigate to: Manage Jenkins → Manage Plugins 
- iii. Install Plugin: Search for and install: Email Extension Plugin
-
-=>Configure Jenkins Global Email Settings 
-i. Go to: Manage Jenkins → Configure System
-
-A. E-mail Notification Section Field Value SMTP Server 
--> smtp.gmail.com Use SMTP Auth ✅ Enabled User Name Your Gmail ID (e.g., archanareddykmit@gmail.com) 
-->Password Paste the 16-digit App Password Use SSL ✅ 
-->Enabled SMTP Port 465 Reply-To Address Your Gmail ID (same as above) 
-➤ Test Configuration Click: Test configuration by sending test e-mail 
-->Provide a valid email address to receive a test mail ✅ 
-->Should receive email from Jenkins
-
-B. Extended E-mail Notification Section Field Value SMTP Server 
-->smtp.gmail.com SMTP Port 465 Use SSL ✅ Enabled Credentials 
-->Add Gmail ID and App Password as Jenkins credentials Default Content Type text/html or leave default Default Recipients Leave empty or provide default emails Triggers Select as per needs (e.g., Failure)
-->Configure Email Notifications for a Jenkins Job 
-
-i. Go to: Jenkins → Select a Job → Configure
-ii. In the Post-build Actions section: 
-    Click: Add post-build action → Editable Email Notification 
-         A. Fill in the fields: Field Value Project Recipient List Add recipient email addresses (comma-separated) Content Type Default (text/plain) or text/html Triggers Select events (e.g., Failure, Success, etc.) Attachments (Optional) Add logs, reports, etc.
-iii. Click Save
-
-Now your Jenkins job is set up to send email notifications based on the build status!
-
-========================================================================================================================== 
- WEEK 12 AWS :::
-
-Step 1: Login to AWS /canvas account
-Step 2: Services --  EC2
-Step 3: Choose region which is near ?  
-	Services -- EC2 --- Launch Instance 
-	Stage 1  --Name (Giving name to the mac)
-    Stage 2  -- Select AMI  ( Note: Select free tier eligible ) ubuntu server
-    Stage 3   --  Architecture as 64-bit	 
-    Stage 4  --  Instance type ----  t2.micro(default 1 CPU,1 GB RAM)
-    Stage 5  --  Create a new keypair---a keypair will downloaded  with extension .pem
-                              Store key in folder AWS
-    Stage 6  -- Network Setting ----Create Security group  --  ( It deals with ports )
-
-    Do this step : HERE select http and https
-    Stage 7 -- Storage - 8GB ( Observation - we have root - it is same as C Drive)
-    Stage 8 --- click on launch instance
-    Stage 9: Number of instances ---1
-
-    =>once it is created select that instance and click on connect
-    =>Here copy the ssh – i command from SSH client connect tab
-    =>We can use powershell /gitbash /webconsole , to connect to ubuntu machine.
-
-NOTE:- cd path of AWS folder // change path
-To connect to above terminals we need to go into the path of the keypair.and 
-paste  the
- ssh -i command from the aws console
-
-Run the following commands to install s/w :-
-=> sudo apt update 
-=>sudo apt-get install docker.io 
-=>sudo apt install git 
-=>sudo apt install nano
-=>git clone 
-Step 4:- nano Dockerfile 
-
-V.  Run the image and access it with public ip of virtual machine
-
-Step 1:- build your image 
-	docker build –t <imagename> .(dot)
-Step 2:- check for images
-Step 3:- run image
-	docker  run –d  --name app-demo –p 6060:8080 <image name>
-
-then use public ip and paste in chrome
-
-=====================================================================================================
-
-Jenkins Automation   WEEK 8 
-
-
- Step 1: Open Jenkins (localhost:8080)
-   	 ├── Click on "New Item" (left side menu)
-
-Step 2: Create Freestyle Project (e.g., MavenJava_Build)
-        	├── Enter project name (e.g., MavenJava_Build)
-        	├── Click "OK"
-
-└── Configure the project:
-            		├── Description: "Java Build demo"
-            		├── Source Code Management:
-            			└── Git repository URL: [GitMavenJava repo URL]
-            		├── Branches to build: */Main   or  */master
-└── Build Steps:
-               	     ├── Add Build Step -> "Invoke top-level Maven targets"
-                  		└── Maven version: MAVEN_HOME
-                 		└── Goals: clean
-                	├── Add Build Step -> "Invoke top-level Maven targets"
-                		└── Maven version: MAVEN_HOME
-                		└── Goals: install
-└── Post-build Actions:
-                    	       ├── Add Post Build Action -> "Archive the artifacts"
-                    			└── Files to archive: **/*
-                    	     ├── Add Post Build Action -> "Build other projects"
-                    			└── Projects to build: MavenJava_Test
-                    			└── Trigger: Only if build is stable
-                    	     └── Apply and Save
-└── Step 3: Create Freestyle Project (e.g., MavenJava_Test)
-        	├── Enter project name (e.g., MavenJava_Test)
-        	├── Click "OK"
-└── Configure the project:
-             ├── Description: "Test demo"
-             ├── Build Environment:
-            		└── Check: "Delete the workspace before build starts"
- ├── Add Build Step -> "Copy artifacts from another project"
-            		└── Project name: MavenJava_Build
-             		└── Build: Stable build only  // tick at this
-            		└── Artifacts to copy: **/*
-├── Add Build Step -> "Invoke top-level Maven targets"
-            		└── Maven version: MAVEN_HOME
-            		└── Goals: test
-            		└── Post-build Actions:
- ├── Add Post Build Action -> "Archive the artifacts"
-                	└── Files to archive: **/*
-                	└── Apply and Save
-└── Step 4: Create Pipeline View for Maven Java project
-        ├── Click "+" beside "All" on the dashboard
-        ├── Enter name: MavenJava_Pipeline
-        ├── Select "Build pipeline view"         // tick here
-         |--- create
-        └── Pipeline Flow:
-            ├── Layout: Based on upstream/downstream relationship
-            ├── Initial job: MavenJava_Build
-            └── Apply and Save OK
-
-└── Step 5: Run the Pipeline and Check Output
-        ├── Click on the trigger to run the pipeline
-        ├── click on the small black box to open the console to check if the build is success
-            
-        
-Note : 
-If build is success and the test project is also automatically triggered with name       
-                      “MavenJava_Test”
-The pipeline is successful if it is in green color as shown ->check the console of the test project
-The test project is successful and all the artifacts are archived successfully
- 
-
-MAVEN WEB AUTOMATION STEPS:
-
-
-
-└── Step 1: Open Jenkins (localhost:8080)
-    ├── Click on "New Item" (left side menu)
-    
-    └── Step 2: Create Freestyle Project (e.g., MavenWeb_Build)
-        ├── Enter project name (e.g., MavenWeb_Build)
-        ├── Click "OK"
-        └── Configure the project:
-            ├── Description: "Web Build demo"
-
-├── Source Code Management:
-            		└── Git repository URL: [GitMavenWeb repo URL]
-
-├── Branches to build: */Main or master
-            └── Build Steps:
-                ├── Add Build Step -> "Invoke top-level Maven targets"
-                	└── Maven version: MAVEN_HOME
-                	 └── Goals: clean
-                ├── Add Build Step -> "Invoke top-level Maven targets"
-                	└── Maven version: MAVEN_HOME
-                	└── Goals: install
-└── Post-build Actions:
-                    ├── Add Post Build Action -> "Archive the artifacts"
-                   	 └── Files to archive: **/*
-                    ├── Add Post Build Action -> "Build other projects"
-                    	└── Projects to build: MavenWeb_Test
-                    	└── Trigger: Only if build is stable
-                    └── Apply and Save
-
-└── Step 3: Create Freestyle Project (e.g., MavenWeb_Test)
-        ├── Enter project name (e.g., MavenWeb_Test)
-        ├── Click "OK"
-        └── Configure the project:
-            ├── Description: "Test demo"
-        
-        ── Add Build Step -> "Copy artifacts from another project"
-            		└── Project name: MavenWeb_Build
-            		└── Build: Stable build only
-            		└── Artifacts to copy: **/*
-        └── Post-build Actions:
-                ├── Add Post Build Action -> "Archive the artifacts"
-                	└── Files to archive: **/*
-                ├── Add Post Build Action -> "Build other projects"
-                	└── Projects to build: MavenWeb_Deploy
-                └── Apply and Save        
-
-└── Step 4: Create Freestyle Project (e.g., MavenWeb_Deploy)
-
-1] Enter project name (e.g., MavenWeb_Deploy) Click "OK"
-
-2]Configure the project:
-            ├── Description: "Web Code Deployment"
-3]Build Environment:
-            		└── Check: "Delete the workspace before build starts"
-4]Add Build Step -> "Copy artifacts from another project"
-            		└── Project name: MavenWeb_Test
-            		└── Build: Stable build only
-               	└── Artifacts to copy: **/*
-5]Post-build Actions:
-                ├── Add Post Build Action -> "Deploy WAR/EAR to a container"
-   └── WAR/EAR File: **/*.war
-   └── Context path: Webpath
- └── Add container -> Tomcat 9.x remote
-└── Credentials: Username: admin, Password: 1234
-── Tomcat URL: https://localhost:8085/
-                └── Apply and Save  
-
-└── Step 5: Create Pipeline View for MavenWeb
-    1]Click "+" beside "All" on the dashboard
-    2] Enter name: MavenWeb_Pipeline
-    3]Select "Build pipeline view"
-        └── Pipeline Flow:
-            ├── Layout: Based on upstream/downstream relationship
-            ├── Initial job: MavenWeb_Build
-            └── Apply and Save
- └── Step 6: Run the Pipeline and Check Output
-        1]Click on the trigger “RUN” to run the pipeline
+    <h1>Hello from AWS</h1>
 </body>
 </html>
+Step b: Open git Bash in folder Example by right clicking with mouse
+Step c: In git bash run the following commands
+git init
+git add .
+Git commit –m “first commit”
+Create git repository (here with name AWS) in GitHub
+Copy command one by one from above repository and run as below
+git branch –M main
+git remote add origin <https url>
+git push –u origin main
+Step f:  refresh repository and You can now see index.html in GitHub
+Step g:  Copy http path.Step h:  Clone the repository with copied http path by command in command prompt git clone <copied http url>
+Step i:  Navigate to the cloned folder. Type cd AWS as below, next ls to 
+Step j:  create Dockerfile in above command prompt in ububtu ie in power shell Nano Dockerfile
+FROM nginx:alpine
+COPY . /usr/share/nginx/html ctrl o enter ctrl x
+sudo docker build –t mywebapp .
+sudo docker run –d –p 80:80 mywebapp
+Go to instances and click on instance here
+Copy public ipv4 address
+Paste it in the browser to get below output
+Note : if https :__ won’t work then type just http:___
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Nagios in Docker
+Pull image
+docker pull jasonrivers/nagios:latest
+Run Nagios
+docker run --name nagiosdemo -p 8888:80 jasonrivers/nagios:latest
+Open browser
+Go to:
+http://localhost:8888
+Login:
+•	username: nagiosadmin
+•	password: nagios
+stopping: docker stop nagiosdemo
+________________________________________
+JENKINS FREESTYLE JAVA PROJECT:
+
+Step 1: Open Jenkins (localhost:8080)
+├── Click on "New Item" (left
+
+STEP2:Create Freestyle Project (e.g., MavenJava_Build)
+├── Enter project name (e.g., MavenJava_Build)
+├── Click "OK" └── Configure the project:
+├── Description: "Java Build demo" ├── Source Code Management:
+└── Git repository URL: [GitMavenJava repo URL]
+├── Branches to build: */Main or */master
+└── Build Steps:
+├── Add Build Step -> "Invoke top-level Maven targets" └── Maven version: MAVEN_HOME
+└── Goals: clean
+├── Add Build Step -> "Invoke top-level Maven targets" └── Maven version: MAVEN_HOME
+└── Goals: install
+└── Post-build Actions:
+├── Add Post Build Action -> "Archive the artifacts" └── Files to archive: **/*
+├── Add Post Build Action -> "Build other projects" └── Projects to build: MavenJava_Test
+└── Trigger: Only if build is stable
+└── Apply and Save
+
+Step 3: Create Freestyle Project (e.g., MavenJava_Test)
+├── Enter project name (e.g., MavenJava_Test)
+├── Click "OK" └── Configure the project:
+├── Description: "Test demo" ├── Build Environment:
+└── Check: "Delete the workspace before build starts" ├── Add Build Step -> "Copy artifacts from another project" └── Project name: MavenJava_Build
+└── Build: Stable build only // tick at this
+└── Artifacts to copy: **/*
+├── Add Build Step -> "Invoke top-level Maven targets" └── Maven version: MAVEN_HOME
+└── Goals: test
+└── Post-build Actions:
+├── Add Post Build Action -> "Archive the artifacts" └── Files to archive: **/*
+└── Apply and Save
+
+└── Step 4: Create Pipeline View for Maven Java project
+├── Click "+" beside "All" on the dashboard
+├── Enter name: MavenJava_Pipeline
+├── Select "Build pipeline view" // tick here
+|--- create
+└── Pipeline Flow:
+├── Layout: Based on upstream/downstream relationship
+├── Initial job: MavenJava_Build
+└── Apply and Save Ok
+===========================
+
+WEB PROJECT:
+
+ Step 1: Open Jenkins (localhost:8080)
+├── Click on "New Item" (left side menu)
+
+ Step 2: Create Freestyle Project (e.g., MavenWeb_Build)
+├── Enter project name (e.g., MavenWeb_Build)
+├── Click "OK" └── Configure the project:
+├── Description: "Web Build demo" ├── Source Code Management:
+└── Git repository URL: [GitMavenWeb repo URL]
+├── Branches to build: */Main or master
+└── Build Steps:
+├── Add Build Step -> "Invoke top-level Maven targets" └── Maven version: MAVEN_HOME
+└── Goals: clean
+├── Add Build Step -> "Invoke top-level Maven targets" └── Maven version: MAVEN_HOME
+└── Goals: install
+└── Post-build Actions:
+├── Add Post Build Action -> "Archive the artifacts" └── Files to archive: **/*
+├── Add Post Build Action -> "Build other projects" └── Projects to build: MavenWeb_Test
+└── Trigger: Only if build is stable
+└── Apply and Save
+
+ Step 3: Create Freestyle Project (e.g., MavenWeb_Test)
+├── Enter project name (e.g., MavenWeb_Test)
+├── Click "OK" └── Configure the project:
+├── Description: "Test demo"
+├── Build Environment:
+└── Check: "Delete the workspace before build starts" ├── Add Build Step -> "Copy artifacts from another project" └── Project name: MavenWeb_Build
+└── Build: Stable build only
+└── Artifacts to copy: **/*
+├── Add Build Step -> "Invoke top-level Maven targets" └── Maven version: MAVEN_HOME
+└── Goals: test
+└── Post-build Actions:
+├── Add Post Build Action -> "Archive the artifacts" └── Files to archive: **/*
+├── Add Post Build Action -> "Build other projects" └── Projects to build: MavenWeb_Deploy
+└── Apply and Save
+
+Step 4: Create Freestyle Project (e.g., MavenWeb_Deploy)
+├── Enter project name (e.g., MavenWeb_Deploy)
+├── Click "OK" └── Configure the project:
+├── Description: "Web Code Deployment"
+├── Build Environment:
+└── Check: "Delete the workspace before build starts" ├── Add Build Step -> "Copy artifacts from another project" └── Project name: MavenWeb_Test
+└── Build: Stable build only
+└── Artifacts to copy: **/*
+└── Post-build Actions:
+├── Add Post Build Action -> "Deploy WAR/EAR to a container" └── WAR/EAR File: **/*.war
+└── Context path: Webpath
+└── Add container -> Tomcat 9.x remote
+└── Credentials: Username: admin, Password: 1234 ── Tomcat URL: https://localhost:8085/
+└── Apply and Save
+
+─ Step 5: Create Pipeline View for MavenWeb
+├── Click "+" beside "All" on the dashboard
+├── Enter name: MavenWeb_Pipeline
+├── Select "Build pipeline view" └── Pipeline Flow:
+├── Layout: Based on upstream/downstream relationship
+├── Initial job: MavenWeb_Build
+└── Apply and Save
+
+Step 6: Run the Pipeline and Check Output
+├── Click on the trigger “RUN” to run the pipeline
+Note:
+1. After Click on Run -> click on the small black box to open the console to checkif thebuild is success
+2. Now we see all the build has success if it appears in green color
+├── Open Tomcat homepage in another tab
+├── Click on the "/webpath" option under the manager app
+
+
+GIT URL FOR WEB PROJECT https://github.com/archanareddyse/mavenweb.git
+
+
+===================================================
+RUNNING MULTIPLE CONTAINERS USING DOCKER COMPOSE
+
+new folder => docker-compse.yml
+
+docker-compose.yml:
+version: '3.8'  # Docker Compose file format version
+
+services:
+  wordpress:  # WordPress service
+    image: wordpress:latest
+    ports:
+      - "8082:80"  # Map port 80 of the container to port 8080 of the host
+    environment:
+      WORDPRESS_DB_HOST: db:3306  # Database host
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DB_NAME: wordpress
+    depends_on:
+      - db  # Ensures the db service starts first
+
+  db:  # MySQL service
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+
+command:=  docker compose up -d
+
+login into wordpress
+===========================================
+
+docker compose flask:
+
+new folder:
+app.py
+docker-compose.yml
+Dockerfile
+
+app.py:
+from flask import Flask
+app = Flask(__name__)
+
+@app.route("/")
+def home():
+    return "HELLO hii"
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
+
+docker-compose.yml:
+version: "3.9"
+
+services:
+  web:
+    build: .
+    container_name: flaskapp
+    ports:
+      - "5000:5000"
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:latest
+    container_name: redisdb
+    ports:
+      - "6379:6379"
+
+Dockerfile:
+FROM python:3.10-slim
+WORKDIR /app
+COPY app.py /app/
+RUN pip install flask
+CMD ["python", "app.py"]
+
+command in cmd:
+docker compose up --build
+localhost:5000 in browser
+===================================
+d)	Create Multi Container of mysql and word press through Docker:
+
+mkdir wordpress-mysql
+cd wordpress-mysql
+docker-compose.yml
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:5.7
+    container_name: mysql-container
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wpuser
+      MYSQL_PASSWORD: wppass
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  wordpress:
+    image: wordpress:latest
+    container_name: wordpress-container
+    restart: always
+    depends_on:
+      - mysql
+    ports:
+      - "8080:80"
+    environment:
+      WORDPRESS_DB_HOST: mysql
+      WORDPRESS_DB_USER: wpuser
+      WORDPRESS_DB_PASSWORD: wppass
+      WORDPRESS_DB_NAME: wordpress
+    volumes:
+      - wordpress_data:/var/www/html
+
+volumes:
+  mysql_data:
+  wordpress_data:
+
+docker compose up -d
+docker ps
+localhost:8080
